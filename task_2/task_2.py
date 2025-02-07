@@ -29,14 +29,15 @@
 Вывод программы в консоль.
 """
 import sys
+from typing import List, Tuple
 
 
 class Circle:
-    def __init__(self, center_x, center_y, radius):
-        self.center = (center_x, center_y)
-        self.radius = radius
+    def __init__(self, center_x: float, center_y: float, radius: float) -> None:
+        self.center: Tuple[float, float] = (center_x, center_y)
+        self.radius: float = radius
 
-    def point_position(self, point):
+    def point_position(self, point: 'Point') -> int:
         dx = point.x - self.center[0]
         dy = point.y - self.center[1]
         distance_squared = dx ** 2 + dy ** 2
@@ -51,20 +52,20 @@ class Circle:
 
 
 class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, x: float, y: float) -> None:
+        self.x: float = x
+        self.y: float = y
 
 
-def read_circle_data(file_path):
+def read_circle_data(file_path: str) -> Circle:
     with open(file_path, 'r') as file:
         center_x, center_y = map(float, file.readline().strip().split())
         radius = float(file.readline().strip())
     return Circle(center_x, center_y, radius)
 
 
-def read_points(file_path):
-    points = []
+def read_points(file_path: str) -> List[Point]:
+    points: List[Point] = []
     with open(file_path, 'r') as file:
         for line in file:
             x, y = map(float, line.strip().split())
@@ -72,7 +73,7 @@ def read_points(file_path):
     return points
 
 
-def main(circle_file, points_file):
+def main(circle_file: str, points_file: str) -> None:
     try:
         circle = read_circle_data(circle_file)
         points = read_points(points_file)
@@ -88,7 +89,7 @@ def main(circle_file, points_file):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Использование: py task_2.py <путь_к_файлу_окружности> <путь_к_файлу_точек>")
+        print("py task_2.py <путь_к_файлу_окружности> <путь_к_файлу_точек>")
     else:
         circle_file = sys.argv[1]
         points_file = sys.argv[2]

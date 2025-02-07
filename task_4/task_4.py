@@ -62,7 +62,6 @@ if __name__ == "__main__":
 
     file_path = sys.argv[1]
     nums = read_numbers_from_file(file_path)
-
     calculator = MedianMovesCalculator(nums)
-    result = calculator.min_moves()
-    print(f"Минимальное количество ходов: {result}")
+    print(calculator.min_moves())
+

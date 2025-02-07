@@ -12,6 +12,7 @@ m по заданному массиву, концом будет являтьс
 Например, для последнего примера на вход подаются аргументы: 5 4, ожидаемый
 вывод в консоль: 14253
 """
+import argparse
 
 
 class CircularCounter:
@@ -27,10 +28,24 @@ class CircularCounter:
             self.current = 1 + (self.current + self.m - 2) % self.n
             if self.current == 1:
                 break
-        print(''.join(map(str, results)))
+        return ''.join(map(str, results))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description='Circular Counter')
+    parser.add_argument('n', type=int, help='Количество элементов')
+    parser.add_argument('m', type=int, help='Шаг')
+    parser.add_argument('output_file', type=str, help='Имя выходного файла')
+
+    args = parser.parse_args()
+
+    counter = CircularCounter(args.n, args.m)
+    result = counter.run()
+
+    # Запись результата в файл
+    with open(args.output_file, 'w') as f:
+        f.write(result)
 
 
 if __name__ == "__main__":
-    n, m = map(int, input("Введите n и m через пробел: ").split())
-    counter = CircularCounter(n, m)
-    counter.run()
+    main()
