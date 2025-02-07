@@ -14,18 +14,31 @@ value для структуры tests.json на основании values.json.
 import os
 import json
 import argparse
-from typing import Dict, Any, List
+from dataclasses import dataclass
 
 
+@dataclass
 class ReportGenerator:
-    def __init__(self, values_path: str, tests_path: str, report_path: str) -> None:
-        self.values_path: str = values_path
-        self.tests_path: str = tests_path
-        self.report_path: str = report_path
-        self.values: Dict[int, str] = {}  # Используем int для id
-        self.tests_structure: Dict[str, Any] = {}
+    """
+    Класс для генерации отчета на основе тестов и значений.
+    """
+    values_path: str
+    tests_path: str
+    report_path: str
+    values: dict[int, str] = None  # Используем int для id
+    tests_structure: list[dict] = None
 
-    def load_json(self, file_path: str) -> Dict[str, Any]:
+    def __post_init__(self) -> None:
+        self.values = {}  # Инициализация словаря значений
+        self.tests_structure = []  # Инициализация структуры тестов
+
+    def load_json(self, file_path: str) -> dict:
+        """
+        Загружает JSON-данные из указанного файла.
+
+        :param file_path: Путь к файлу.
+        :return: Данные в формате словаря.
+        """
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
@@ -36,7 +49,12 @@ class ReportGenerator:
             print(f"Ошибка: Не удалось декодировать JSON из файла {file_path}.")
             exit(1)
 
-    def fill_report_structure(self, tests_structure: List[Dict[str, Any]]) -> None:
+    def fill_report_structure(self, tests_structure: list[dict]) -> None:
+        """
+        Заполняет структуру отчета на основе тестов.
+
+        :param tests_structure: Список тестов.
+        """
         # Сортируем тесты по id
         tests_structure.sort(key=lambda x: x['id'])
 
@@ -53,6 +71,9 @@ class ReportGenerator:
                 test['values'].sort(key=lambda x: x['id'])
 
     def generate_report(self) -> None:
+        """
+        Генерирует отчет и записывает его в файл.
+        """
         values_data = self.load_json(self.values_path)
         tests_data = self.load_json(self.tests_path)
 

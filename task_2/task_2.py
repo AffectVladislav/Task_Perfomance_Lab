@@ -29,17 +29,35 @@
 Вывод программы в консоль.
 """
 import sys
-from typing import List, Tuple
+from dataclasses import dataclass
 
 
+@dataclass
+class Point:
+    """
+    Класс для представления точки в 2D пространстве.
+    """
+    x: float
+    y: float
+
+
+@dataclass
 class Circle:
-    def __init__(self, center_x: float, center_y: float, radius: float) -> None:
-        self.center: Tuple[float, float] = (center_x, center_y)
-        self.radius: float = radius
+    """
+    Класс для представления окружности.
+    """
+    center: Point
+    radius: float
 
-    def point_position(self, point: 'Point') -> int:
-        dx = point.x - self.center[0]
-        dy = point.y - self.center[1]
+    def point_position(self, point: Point) -> int:
+        """
+        Определяет положение точки относительно окружности.
+
+        :param point: Точка, положение которой нужно определить.
+        :return: 1, если точка внутри окружности; 0, если на окружности; 2, если снаружи.
+        """
+        dx = point.x - self.center.x
+        dy = point.y - self.center.y
         distance_squared = dx ** 2 + dy ** 2
         radius_squared = self.radius ** 2
 
@@ -51,21 +69,27 @@ class Circle:
             return 2  # Точка снаружи окружности
 
 
-class Point:
-    def __init__(self, x: float, y: float) -> None:
-        self.x: float = x
-        self.y: float = y
-
-
 def read_circle_data(file_path: str) -> Circle:
+    """
+    Читает данные окружности из файла.
+
+    :param file_path: Путь к файлу с данными окружности.
+    :return: Объект Circle.
+    """
     with open(file_path, 'r') as file:
         center_x, center_y = map(float, file.readline().strip().split())
         radius = float(file.readline().strip())
-    return Circle(center_x, center_y, radius)
+    return Circle(Point(center_x, center_y), radius)
 
 
-def read_points(file_path: str) -> List[Point]:
-    points: List[Point] = []
+def read_points(file_path: str) -> list[Point]:
+    """
+    Читает точки из файла.
+
+    :param file_path: Путь к файлу с данными точек.
+    :return: Список объектов Point.
+    """
+    points: list[Point] = []
     with open(file_path, 'r') as file:
         for line in file:
             x, y = map(float, line.strip().split())
@@ -74,6 +98,12 @@ def read_points(file_path: str) -> List[Point]:
 
 
 def main(circle_file: str, points_file: str) -> None:
+    """
+    Главная функция для чтения данных окружности и точек, а также определения положения точек.
+
+    :param circle_file: Путь к файлу с данными окружности.
+    :param points_file: Путь к файлу с данными точек.
+    """
     try:
         circle = read_circle_data(circle_file)
         points = read_points(points_file)
@@ -89,7 +119,7 @@ def main(circle_file: str, points_file: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("py task_2.py <путь_к_файлу_окружности> <путь_к_файлу_точек>")
+        print("Использование: py task_2.py <путь_к_файлу_окружности> <путь_к_файлу_точек>")
     else:
         circle_file = sys.argv[1]
         points_file = sys.argv[2]

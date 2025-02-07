@@ -13,15 +13,24 @@ m по заданному массиву, концом будет являтьс
 вывод в консоль: 14253
 """
 import argparse
+from dataclasses import dataclass
 
 
+@dataclass
 class CircularCounter:
-    def __init__(self, n: int, m: int) -> None:
-        self.n = n  # Кол-во элементов
-        self.m = m  # Шаг
-        self.current = 1  # Текущий элемент
+    """
+    Класс для реализации кругового счетчика.
+    """
+    n: int  # Количество элементов
+    m: int  # Шаг
+    current: int = 1  # Текущий элемент
 
-    def run(self) -> None:
+    def run(self) -> str:
+        """
+        Запускает круговой счетчик и возвращает последовательность элементов.
+
+        :return: Строка с последовательностью элементов.
+        """
         results = []
         while True:
             results.append(self.current)
@@ -32,6 +41,9 @@ class CircularCounter:
 
 
 def main() -> None:
+    """
+    Главная функция для запуска кругового счетчика и записи результата в файл.
+    """
     parser = argparse.ArgumentParser(description='Circular Counter')
     parser.add_argument('n', type=int, help='Количество элементов')
     parser.add_argument('m', type=int, help='Шаг')
